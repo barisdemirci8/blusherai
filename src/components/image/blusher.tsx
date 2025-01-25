@@ -112,17 +112,29 @@ export default function Blusher() {
             ctx.drawImage(imageRef.current, 0, 0);
         }
     }
-    
+
+    const downloadImage = () => {
+        const canvas = canvasRef.current;
+        const ctx = canvas?.getContext("2d");
+
+        if (canvas && ctx && imageRef.current) {
+            const dataUrl = canvas.toDataURL();
+            const link = document.createElement("a");
+            link.href = dataUrl;
+            link.download = "mask.png";
+            link.click();
+        }
+    }
 
     return (
       <div className="flex flex-col justify-center items-center gap-3">
-        <div className="w-128 h-128">
+        {/* <div className="w-128 h-128">
                 <img 
                     src={"/images/ducks.png"}
                     alt="test image"
                     className="object-fill rounded-sm"
                 />
-            </div>
+            </div> */}
         <div className="flex justify-center items-center gap-3 w-full">
           <Slider
             className="cursor-pointer"
@@ -137,6 +149,9 @@ export default function Blusher() {
           </Button>
           <Button className="hover:cursor-pointer" onClick={loadImage}>
             Load 
+          </Button>
+          <Button className="hover:cursor-pointer" onClick={downloadImage}>
+            Download 
           </Button>
         </div>
 
