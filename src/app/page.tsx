@@ -1,9 +1,9 @@
+import Blusher from "@/components/image/blusher";
+
 export default function Home() {
   return (
-    <main className="">
-        <div className="bg-yellow-200">1</div>
-        <div className="bg-green-200">2</div>
-        <div className="bg-blue-200">3</div>
+    <main className="flex-1 flex flex-col justify-center items-center">
+        <Blusher />
     </main>
   );
 }
