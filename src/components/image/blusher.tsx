@@ -10,7 +10,8 @@ export default function Blusher() {
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
-    const [brushSize, setBrushSize] = useState<number>(30);
+    const [isErasing, setIsErasing] = useState<boolean>(false);
+    const [brushSize, setBrushSize] = useState<number>(60);
 
     useEffect(() => {
         const image = new Image();
@@ -25,11 +26,11 @@ export default function Blusher() {
         }
     }, [])
 
-    const startDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const startDraw = () => {
         setIsDrawing(true);
     }
 
-    const stopDraw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+    const stopDraw = () => {
         setIsDrawing(false);
     }
 
@@ -54,9 +55,12 @@ export default function Blusher() {
             const x: number = (e.clientX - canvasRect.left) * scaleX;
             const y: number = (e.clientY - canvasRect.top) * scaleY;
 
+            // draw over the existing content
+            ctx.globalCompositeOperation = "destination-out";
+
             ctx.beginPath();
             ctx.arc(x, y, brushSize / 2, 0, 2 * Math.PI);
-            ctx.fillStyle = "rgba(154, 148, 188, 0.15)";
+            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
             ctx.fill();
         }
     }
@@ -82,22 +86,13 @@ export default function Blusher() {
             
             const scaleX: number = canvas.width / imageRef.current.width;
             const scaleY: number = canvas.height / imageRef.current.height;
-
-            console.log('scale width: ', scaleX);
-            console.log('scale height: ', scaleY);
-
             const scale: number = Math.min(scaleX, scaleY);
-            console.log('scale: ', scale);
 
             const scaledWidth: number = imageRef.current.width * scale;
             const scaledHeight: number = imageRef.current.height * scale;
-            console.log('scaled width: ', scaledWidth);
-            console.log('scaled height: ', scaledHeight);
 
             const offsetX: number = (canvas.width - scaledWidth) / 2;
             const offsetY: number = (canvas.height - scaledHeight) / 2;
-            console.log('offset x: ', offsetX);
-            console.log('offset y: ', offsetY);
 
             ctx.drawImage(imageRef.current, offsetX, offsetY, scaledWidth, scaledHeight);
         }
@@ -118,11 +113,40 @@ export default function Blusher() {
         const ctx = canvas?.getContext("2d");
 
         if (canvas && ctx && imageRef.current) {
-            const dataUrl = canvas.toDataURL();
-            const link = document.createElement("a");
-            link.href = dataUrl;
-            link.download = "mask.png";
-            link.click();
+
+            // create canvas for the mask
+            const maskCanvas = document.createElement("canvas");
+            maskCanvas.width = canvas.width;
+            maskCanvas.height = canvas.height;
+            const maskCtx = maskCanvas.getContext("2d");
+
+            if (maskCtx) {
+
+                // draw original image into the mask
+                /* const scaleX: number = canvas.width / imageRef.current.width;
+                const scaleY: number = canvas.height / imageRef.current.height;
+                const scale: number = Math.min(scaleX, scaleY);
+
+                const scaledWidth: number = imageRef.current.width * scale;
+                const scaledHeight: number = imageRef.current.height * scale;
+
+                const offsetX: number = (canvas.width - scaledWidth) / 2;
+                const offsetY: number = (canvas.height - scaledHeight) / 2;
+                maskCtx.drawImage(imageRef.current, offsetX, offsetY, scaledWidth, scaledHeight);
+                //maskCtx.drawImage(imageRef.current!, 0, 0);
+
+                // apply the mask => only parts of existing content that overlap stay
+                maskCtx.globalCompositeOperation = "destination-in";
+                maskCtx.drawImage(canvas, 0, 0); */
+                //maskCtx.drawImage(canvas, 0, 0);
+
+                // download the image
+                const dataUrl = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = "mask.png";
+                link.click();
+            }
         }
     }
 
@@ -144,6 +168,9 @@ export default function Blusher() {
             max={100}
             min={1}
           />
+          <Button className="hover:cursor-pointer bg-red-200" onClick={(e) => setIsErasing(!isErasing)}>
+            Entfernen 
+          </Button>
           <Button className="hover:cursor-pointer" onClick={clearDrawing}>
             Reset
           </Button>
