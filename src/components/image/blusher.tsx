@@ -3,8 +3,13 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Slider } from "../ui/slider";
+import { useBlush } from "@/lib/hooks/use-blush";
 
 export default function Blusher() {
+
+    const { mutate, data, error, isPending } = useBlush();
+    console.log('data: ', data);
+    console.log('error: ', error);
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
@@ -141,13 +146,19 @@ export default function Blusher() {
                 //maskCtx.drawImage(canvas, 0, 0);
 
                 // download the image
-                const dataUrl = canvas.toDataURL("image/png");
+                canvas.toBlob((blob) => {
+                      
+                    mutate("anything");
+                }, "image/png");
+
+                /* const dataUrl = canvas.toDataURL("image/png");
                 const link = document.createElement("a");
                 link.href = dataUrl;
                 link.download = "mask.png";
-                link.click();
+                link.click(); */
             }
         }
+        
     }
 
     return (
@@ -192,6 +203,8 @@ export default function Blusher() {
           onMouseLeave={stopDraw}
           onMouseMove={draw}
         />
+
+        <div>{isPending ? 'pending..' : 'stale'}</div>
       </div>
     );
 }

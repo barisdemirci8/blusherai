@@ -3,6 +3,7 @@ import "./globals.css";
 import { geistMono, geistSans } from "@/lib/fonts";
 import Header from "@/components/header/header";
 import Footer from "@/components/footer/footer";
+import Providers from "@/components/providers";
 
 export const metadata: Metadata = {
   title: "blusherai",
@@ -15,15 +16,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body
-        suppressHydrationWarning
-        className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[auto_1fr_auto] min-h-screen`}
-      >
-            <Header />
-        {children}
-            <Footer />
-      </body>
-    </html>
+    <Providers>
+      <html lang="en">
+        <body
+          suppressHydrationWarning
+          className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[auto_1fr_auto] min-h-screen`}
+        >
+          <Header />
+          {children}
+          <Footer />
+        </body>
+      </html>
+    </Providers>
   );
 }
