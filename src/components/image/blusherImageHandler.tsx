@@ -4,18 +4,17 @@ import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import { Slider } from "../ui/slider";
 import { useBlush } from "@/lib/hooks/use-blush";
+import { BlusherForm } from "./blusherForm";
+import { useFormContext } from "react-hook-form";
 
-export default function Blusher() {
+export default function BlusherImageHandler() {
 
-    const { mutate, data, error, isPending } = useBlush();
-    console.log('data: ', data);
-    console.log('error: ', error);
+    const { setValue } = useFormContext<BlusherForm>();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
 
     const [isDrawing, setIsDrawing] = useState<boolean>(false);
-    const [isErasing, setIsErasing] = useState<boolean>(false);
     const [brushSize, setBrushSize] = useState<number>(60);
 
     useEffect(() => {
@@ -36,7 +35,15 @@ export default function Blusher() {
     }
 
     const stopDraw = () => {
-        setIsDrawing(false);
+        if (isDrawing) {
+
+            setIsDrawing(false);
+            const canvas = canvasRef.current;
+
+            if (canvas) {
+                canvas.toBlob((blob) => setValue("image", blob), "image/png");
+            }
+        }
     }
 
     const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
@@ -103,16 +110,6 @@ export default function Blusher() {
         }
     };
 
-    const loadImage = () => {
-        // just for testing
-        const canvas = canvasRef.current;
-        const ctx = canvas?.getContext("2d");
-
-        if (canvas && ctx && imageRef.current) {
-            ctx.drawImage(imageRef.current, 0, 0);
-        }
-    }
-
     const downloadImage = () => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext("2d");
@@ -146,10 +143,6 @@ export default function Blusher() {
                 //maskCtx.drawImage(canvas, 0, 0);
 
                 // download the image
-                canvas.toBlob((blob) => {
-                      
-                    mutate("anything");
-                }, "image/png");
 
                 /* const dataUrl = canvas.toDataURL("image/png");
                 const link = document.createElement("a");
@@ -163,13 +156,6 @@ export default function Blusher() {
 
     return (
       <div className="flex flex-col justify-center items-center gap-3">
-        {/* <div className="w-128 h-128">
-                <img 
-                    src={"/images/ducks.png"}
-                    alt="test image"
-                    className="object-fill rounded-sm"
-                />
-            </div> */}
         <div className="flex justify-center items-center gap-3 w-full">
           <Slider
             className="cursor-pointer"
@@ -179,17 +165,8 @@ export default function Blusher() {
             max={100}
             min={1}
           />
-          <Button className="hover:cursor-pointer bg-red-200" onClick={(e) => setIsErasing(!isErasing)}>
-            Entfernen 
-          </Button>
           <Button className="hover:cursor-pointer" onClick={clearDrawing}>
             Reset
-          </Button>
-          <Button className="hover:cursor-pointer" onClick={loadImage}>
-            Load 
-          </Button>
-          <Button className="hover:cursor-pointer" onClick={downloadImage}>
-            Download 
           </Button>
         </div>
 
@@ -203,8 +180,6 @@ export default function Blusher() {
           onMouseLeave={stopDraw}
           onMouseMove={draw}
         />
-
-        <div>{isPending ? 'pending..' : 'stale'}</div>
       </div>
     );
 }

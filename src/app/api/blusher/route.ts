@@ -4,7 +4,11 @@ import OpenAI from "openai";
 const openai = new OpenAI();
 
 export async function POST(request: NextRequest) {
-  
+
+    const { body } = request;
+
+    const json = await request.json();
+    console.log('incoming request: ', json);
     /* const response = await openai.images.generate({
         model: "dall-e-3",
         prompt: "an arsenal player from the past",
@@ -12,10 +16,10 @@ export async function POST(request: NextRequest) {
         size: "1024x1024"
     }); */
 
-    const response = await openai.images.edit({
+    /* const response = await openai.images.edit({
         model: "dalle-e-2",
-        
-    });
+    }); */
 
-    return NextResponse.json({message: 'ok', imageUrl: response.data[0].url});
+    return NextResponse.json({message: 'ok'});
+    //return NextResponse.json({message: 'ok', imageUrl: response.data[0].url});
 }
