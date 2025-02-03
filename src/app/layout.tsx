@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { geistMono, geistSans } from "@/lib/fonts";
+import { bubbleGums, fingerPaint, geistMono, geistSans } from "@/lib/fonts";
 import Header from "@/components/header/header";
 import Footer from "@/components/footer/footer";
 import Providers from "@/components/providers";
@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang="en">
         <body
           suppressHydrationWarning
-          className={`${geistSans.variable} ${geistMono.variable} grid grid-rows-[auto_1fr_auto] min-h-screen`}
+          className={`${geistSans.variable} ${geistMono.variable} ${bubbleGums.variable} grid grid-rows-[auto_1fr_auto] min-h-screen bg-[url('/background.svg')]`}
         >
           <Header />
           {children}

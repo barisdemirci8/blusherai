@@ -43,6 +43,9 @@
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
   --radius-sm: calc(var(--radius) - 4px);
+
+    --font-finger-paint: var(--font-finger-paint);
+    --font-bubblegum: var(--font-bubblegum);
 }
 
 @layer base {

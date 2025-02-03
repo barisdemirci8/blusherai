@@ -72,7 +72,7 @@ export default function BlusherForm() {
               render={({ field }) => (
                 <FormItem className="col-span-4">
                   <FormControl>
-                    <Input {...field} className="focus-visible:ring-transparent" />
+                    <Input {...field} className="focus-visible:ring-0 focus-visible:ring-offset-0" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

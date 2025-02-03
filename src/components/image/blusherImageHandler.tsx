@@ -42,14 +42,6 @@ export default function BlusherImageHandler() {
 
             if (canvas) {
                 canvas.toBlob((blob) => setValue("mask", blob), "image/png");
-                //canvas.toBlob((blob) => setValue("image", blob), "image/png");
-
-
-                /* const dataUrl = canvas.toDataURL("image/png");
-                const link = document.createElement("a");
-                link.href = dataUrl;
-                link.download = "mask.png";
-                link.click();  */
             }
         }
     }
@@ -85,16 +77,6 @@ export default function BlusherImageHandler() {
         }
     }
 
-    const clearDrawing = () => {
-        /* const canvas = canvasRef.current;
-        const ctx = canvas?.getContext("2d");
-
-        if (canvas && ctx) {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        } */
-        drawImageOnCanvas();
-    }
-
     const handleBrushChange = (values: number[]) => {
         setBrushSize(values[0]);
     }
@@ -106,7 +88,7 @@ export default function BlusherImageHandler() {
         if (canvas && ctx && imageRef.current) {
 
             // set bg
-            ctx.fillStyle = "rgba(71, 120, 144, 0.5)";
+            ctx.fillStyle = "rgba(71, 120, 144, 0.8)";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             const scaleX: number = canvas.width / imageRef.current.width;
@@ -173,7 +155,7 @@ export default function BlusherImageHandler() {
       <div className="flex flex-col justify-center items-center gap-3">
         <canvas
           ref={canvasRef}
-          className="border rounded-md shadow-xl object-fit cursor-pointer w-128 h-128"
+          className="border rounded-md shadow-xl object-fit cursor-pointer w-128 h-128 bg-primary"
           width={1024}
           height={1024}
           onMouseDown={startDraw}
