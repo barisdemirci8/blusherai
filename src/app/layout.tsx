@@ -4,6 +4,7 @@ import { geistMono, geistSans } from "@/lib/fonts";
 import Header from "@/components/header/header";
 import Footer from "@/components/footer/footer";
 import Providers from "@/components/providers";
+import { Toaster } from "@/components/ui/toaster";
 
 export const metadata: Metadata = {
   title: "blusherai",
@@ -25,6 +26,7 @@ export default function RootLayout({
           <Header />
           {children}
           <Footer />
+          <Toaster />
         </body>
       </html>
     </Providers>

@@ -8,17 +8,20 @@ import { Input } from "../ui/input";
 import BlusherImageHandler from "./blusherImageHandler";
 import { Button } from "../ui/button";
 import { useBlush } from "@/lib/hooks/use-blush";
+import Loader from "../ui/loader";
+import { useToast, toast } from "@/hooks/use-toast";
+import { useEffect } from "react";
 
 const blusherFormSchema = z.object({
-    prompt: z.string().nonempty({message: 'Prompt can not be empty.'}),
+    prompt: z.string().nonempty({message: 'Please enter what you want to be edited in.'}),
     image: z.instanceof(Blob).nullable(),
+    mask: z.instanceof(Blob).nullable().optional(),
 });
 export type BlusherForm = z.infer<typeof blusherFormSchema>;
 
 export default function BlusherForm() {
 
     const { mutate, data, error, isPending } = useBlush();
-    console.log('data: ', data);
 
     const form = useForm<BlusherForm>({
         resolver: zodResolver(blusherFormSchema),
@@ -29,19 +32,33 @@ export default function BlusherForm() {
 
     const { control, handleSubmit } = form;
 
-    const onSubmit = async (formValues: BlusherForm) => {
+    const onSubmit = (formValues: BlusherForm) => {
         console.log('submitting form: ', formValues);
 
         // convert blob to buffer
-        if (formValues.image) {
-            const arrayBuffer = await formValues.image.arrayBuffer();
+        if (formValues.image && formValues.mask) {
 
             const formData = new FormData();
             formData.append('prompt', formValues.prompt);
             formData.append('image', formValues.image);
+            formData.append('mask', formValues.mask);
 
             mutate(formData);
         }
+    }
+
+    useEffect(() => {
+      if (error) {
+        toast({
+          title: "Failed",
+          description: "Could not generate image, try later.",
+          variant: "destructive",
+        });
+      }
+    }, [error]);
+
+    if (isPending) {
+        return <Loader />;
     }
 
     return (
@@ -55,13 +72,13 @@ export default function BlusherForm() {
               render={({ field }) => (
                 <FormItem className="col-span-4">
                   <FormControl>
-                    <Input {...field}/>
+                    <Input {...field} className="focus-visible:ring-transparent" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="hover:cursor-pointer">
+            <Button type="submit" className="hover:cursor-pointer" disabled={isPending}>
               Generate
             </Button>
           </div>

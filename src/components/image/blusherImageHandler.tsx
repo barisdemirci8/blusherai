@@ -19,7 +19,7 @@ export default function BlusherImageHandler() {
 
     useEffect(() => {
         const image = new Image();
-        image.src = "/images/ducks.png";
+        image.src = "/images/bambi.jpg";
         image.crossOrigin = "anonymous";
 
         image.onload = () => {
@@ -41,7 +41,15 @@ export default function BlusherImageHandler() {
             const canvas = canvasRef.current;
 
             if (canvas) {
-                canvas.toBlob((blob) => setValue("image", blob), "image/png");
+                canvas.toBlob((blob) => setValue("mask", blob), "image/png");
+                //canvas.toBlob((blob) => setValue("image", blob), "image/png");
+
+
+                /* const dataUrl = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = dataUrl;
+                link.download = "mask.png";
+                link.click();  */
             }
         }
     }
@@ -72,29 +80,34 @@ export default function BlusherImageHandler() {
 
             ctx.beginPath();
             ctx.arc(x, y, brushSize / 2, 0, 2 * Math.PI);
-            ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
+            ctx.fillStyle = "rgba(71, 120, 144, 0.5)";
             ctx.fill();
         }
     }
 
     const clearDrawing = () => {
-        const canvas = canvasRef.current;
+        /* const canvas = canvasRef.current;
         const ctx = canvas?.getContext("2d");
 
         if (canvas && ctx) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
+        } */
+        drawImageOnCanvas();
     }
 
     const handleBrushChange = (values: number[]) => {
         setBrushSize(values[0]);
     }
-    
+
     const drawImageOnCanvas = () => {
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext("2d");
 
         if (canvas && ctx && imageRef.current) {
+
+            // set bg
+            ctx.fillStyle = "rgba(71, 120, 144, 0.5)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
             
             const scaleX: number = canvas.width / imageRef.current.width;
             const scaleY: number = canvas.height / imageRef.current.height;
@@ -107,6 +120,8 @@ export default function BlusherImageHandler() {
             const offsetY: number = (canvas.height - scaledHeight) / 2;
 
             ctx.drawImage(imageRef.current, offsetX, offsetY, scaledWidth, scaledHeight);
+
+            canvas.toBlob(blob => setValue("image", blob), "image/png");
         }
     };
 
@@ -156,7 +171,19 @@ export default function BlusherImageHandler() {
 
     return (
       <div className="flex flex-col justify-center items-center gap-3">
+        <canvas
+          ref={canvasRef}
+          className="border rounded-md shadow-xl object-fit cursor-pointer w-128 h-128"
+          width={1024}
+          height={1024}
+          onMouseDown={startDraw}
+          onMouseUp={stopDraw}
+          onMouseLeave={stopDraw}
+          onMouseMove={draw}
+        />
+
         <div className="flex justify-center items-center gap-3 w-full">
+          <p className="whitespace-nowrap">Brush size:</p>
           <Slider
             className="cursor-pointer"
             value={[brushSize]}
@@ -165,21 +192,7 @@ export default function BlusherImageHandler() {
             max={100}
             min={1}
           />
-          <Button className="hover:cursor-pointer" onClick={clearDrawing}>
-            Reset
-          </Button>
         </div>
-
-        <canvas
-          ref={canvasRef}
-          className="border-2 border-red-200 object-fit cursor-pointer w-128 h-128"
-          width={1024}
-          height={1024}
-          onMouseDown={startDraw}
-          onMouseUp={stopDraw}
-          onMouseLeave={stopDraw}
-          onMouseMove={draw}
-        />
       </div>
     );
 }
