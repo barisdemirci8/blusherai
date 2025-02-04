@@ -11,6 +11,7 @@ import { useBlush } from "@/lib/hooks/use-blush";
 import Loader from "../ui/loader";
 import { useToast, toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import GeneratedImage from "./generatedImage";
 
 const blusherFormSchema = z.object({
     prompt: z.string().nonempty({message: 'Please enter what you want to be edited in.'}),
@@ -21,7 +22,7 @@ export type BlusherForm = z.infer<typeof blusherFormSchema>;
 
 export default function BlusherForm() {
 
-    const { mutate, data, error, isPending } = useBlush();
+    const { mutate, data, error, status, isPending } = useBlush();
 
     const form = useForm<BlusherForm>({
         resolver: zodResolver(blusherFormSchema),
@@ -33,7 +34,6 @@ export default function BlusherForm() {
     const { control, handleSubmit } = form;
 
     const onSubmit = (formValues: BlusherForm) => {
-        console.log('submitting form: ', formValues);
 
         // convert blob to buffer
         if (formValues.image && formValues.mask) {
@@ -58,14 +58,26 @@ export default function BlusherForm() {
     }, [error]);
 
     if (isPending) {
-        return <Loader />;
+        return (
+          <div className="flex flex-col justify-center items-center gap-3">
+            <Loader />
+          </div>
+        );
+    }
+
+    if (data) {
+        console.log("data: ", data);
+        return(
+            <GeneratedImage imageUrl={data.imageUrl}/>
+        );
     }
 
     return (
       <Form {...form}>
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-3 flex flex-col justify-center items-center">
           <BlusherImageHandler />
-          <div className="grid grid-cols-5 gap-2">
+                <p>{status}</p>
+          <div className="grid grid-cols-5 gap-2 w-[90%] md:w-full justify-center items-center">
             <FormField
               name="prompt"
               control={control}

@@ -1,4 +1,3 @@
-import { BlusherForm } from "@/components/image/blusherForm";
 import { useMutation } from "@tanstack/react-query";
 
 const BLUSH_QUERY_KEY = "BLUSH_QUERY_KEY";
@@ -7,17 +6,13 @@ export function useBlush() {
     return useMutation({
         mutationKey: [ BLUSH_QUERY_KEY ],
         mutationFn: (formData: FormData) => {
-            return createImage(formData);
+            return editImage(formData);
         }
     });
 }
 
-async function createImage(formData: FormData) {
+async function editImage(formData: FormData) {
     const options = {
-        /* headers: {
-            'Content-Type' : 'application/json',
-            'Accept' : 'application/json'
-        }, */
         method: 'POST',
         body: formData,
     };

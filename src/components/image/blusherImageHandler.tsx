@@ -1,9 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Button } from "../ui/button";
 import { Slider } from "../ui/slider";
-import { useBlush } from "@/lib/hooks/use-blush";
 import { BlusherForm } from "./blusherForm";
 import { useFormContext } from "react-hook-form";
 
@@ -23,8 +21,6 @@ export default function BlusherImageHandler() {
         image.crossOrigin = "anonymous";
 
         image.onload = () => {
-            console.log('image width: ', image.width);
-            console.log('image height: ', image.height);
             imageRef.current = image;
             drawImageOnCanvas();
         }
@@ -86,11 +82,6 @@ export default function BlusherImageHandler() {
         const ctx = canvas?.getContext("2d");
 
         if (canvas && ctx && imageRef.current) {
-
-            // set bg
-            ctx.fillStyle = "rgba(71, 120, 144, 0.8)";
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
             const scaleX: number = canvas.width / imageRef.current.width;
             const scaleY: number = canvas.height / imageRef.current.height;
             const scale: number = Math.min(scaleX, scaleY);
@@ -155,7 +146,7 @@ export default function BlusherImageHandler() {
       <div className="flex flex-col justify-center items-center gap-3">
         <canvas
           ref={canvasRef}
-          className="border rounded-md shadow-xl object-fit cursor-pointer w-128 h-128 bg-primary"
+          className="border rounded-md shadow-xl object-fit cursor-pointer w-128 h-128 bg-muted"
           width={1024}
           height={1024}
           onMouseDown={startDraw}
@@ -164,7 +155,7 @@ export default function BlusherImageHandler() {
           onMouseMove={draw}
         />
 
-        <div className="flex justify-center items-center gap-3 w-full">
+        <div className="flex justify-center items-center gap-3 w-2/3 md:w-full">
           <p className="whitespace-nowrap">Brush size:</p>
           <Slider
             className="cursor-pointer"
