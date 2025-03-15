@@ -3,23 +3,33 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import Loader from "../ui/loader";
+import { ResponseFormat } from "@/lib/hooks/use-blush";
+import { toast, useToast } from "@/hooks/use-toast";
 
 type GeneratedImageProps = {
     imageUrl: string;
+    format: ResponseFormat;
 }
 
 export default function GeneratedImage(props: GeneratedImageProps) {
 
-    const { imageUrl } = props;
+    const { imageUrl, format } = props;
+
+    const { toast } = useToast();
 
     const canvasRef = useRef<HTMLCanvasElement>(null);
     const imageRef = useRef<HTMLImageElement>(null);
-
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     useEffect(() => {
         const image = new Image();
-        image.src = imageUrl;
+
+        if (format === 'b64_json') {
+            image.src = `data:image/png;base64,${imageUrl}`;
+        } 
+        if (format === 'url') {
+            image.src = imageUrl;
+        }
 
         image.onload = () => {
             imageRef.current = image;
@@ -47,19 +57,35 @@ export default function GeneratedImage(props: GeneratedImageProps) {
         }
     };
 
-    const downloadImage = () => {
+    const downloadImage = async () => {
+        setIsLoading(true);
         const canvas = canvasRef.current;
         const ctx = canvas?.getContext("2d");
 
         if (canvas && ctx && imageRef.current) {
+            
+            // fetch the image from the server
+            const response = await fetch('/api/blusher/download', {
+                method: 'POST',
+                body: JSON.stringify({ url: imageUrl })
+            });
 
-            imageRef.current.crossOrigin = "anonymous";
+            setIsLoading(false);
 
-            // img to data 
-            const dataUrl = canvas.toDataURL("image/png");
+            if (!response.ok) {
+              toast({
+                title: "Download failed.",
+                description: "Could not download the image, try again later.",
+                variant: "destructive",
+              });
+              return;
+            }
+
+            const imageBlob = await response.blob();
+            const downloadUrl = URL.createObjectURL(imageBlob);
 
             const a = document.createElement("a");
-            a.href = dataUrl;
+            a.href = downloadUrl;
             a.download = "fancy-pic.png";
             a.click();
         }
@@ -67,15 +93,18 @@ export default function GeneratedImage(props: GeneratedImageProps) {
 
     return (
       <div className="flex flex-col justify-center items-center gap-3">
-        {isLoading && <Loader />}
+        {isLoading ? 
+            <Loader /> :
+            <p>Here is your image!</p>
+        }
         <canvas
           hidden={isLoading}
           ref={canvasRef}
-          className="border rounded-md shadow-xl object-fit cursor-pointer w-128 h-128"
+          className="border rounded-md shadow-xl object-fit w-128 h-128"
           width={1024}
           height={1024}
         />
-        <Button onClick={downloadImage}>Download</Button>
+        <Button className="cursor-pointer" onClick={downloadImage}>Download</Button>
       </div>
     );
 }
