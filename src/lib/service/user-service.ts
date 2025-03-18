@@ -1,22 +1,30 @@
 import { db } from "@/db";
 import { TUser, usersTable } from "@/db/schema";
-import { eq, sql } from "drizzle-orm";
+import { and, eq, sql } from "drizzle-orm";
+import { Profile } from "next-auth";
 
-export async function createUser(email: string, password: string) {
+export async function createUser(provider: string, profile: any) {
   const existingUser = await db.query.usersTable.findFirst({
-    where: eq(usersTable.email, email),
+    where: and(
+      eq(usersTable.email, profile.email),
+      eq(usersTable.provider, provider),
+    ),
   });
+
   if (existingUser) {
-    console.log("existing user: ", existingUser);
-    return { message: "User already exists." };
+    return existingUser;
   }
-  const savedUser = await db
+
+  // Create a new user with profile data from Google
+  const newUser = await db
     .insert(usersTable)
     .values({
-      email: email,
-      password: password,
+      provider,
+      email: profile.email,
+      picture: profile.picture,
+      providerId: profile.sub,
     })
     .returning();
 
-  return { message: "User created" };
+  return newUser[0];
 }

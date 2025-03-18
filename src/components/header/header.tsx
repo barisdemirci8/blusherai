@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Button } from "../ui/button";
 
 export default function Header() {
@@ -7,7 +8,7 @@ export default function Header() {
         <div className="text-white font-medium">Credits: 100</div>
         <div className="flex space-x-4">
           <Button variant="default" className="text-white cursor-pointer">
-            Sign Up
+            <Link href={"/api/auth/signin"}>Sign Up</Link>
           </Button>
           <Button variant="default" className="text-white cursor-pointer">
             Login

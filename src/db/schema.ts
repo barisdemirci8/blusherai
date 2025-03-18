@@ -10,7 +10,10 @@ import {
 export const usersTable = pgTable("users", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   email: varchar("email", { length: 255 }).notNull().unique(),
-  password: varchar("password").notNull(),
+  //password: varchar("password").notNull(),
+  provider: varchar("provider"),
+  providerId: varchar("provider_id"),
+  picture: varchar("picture"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
