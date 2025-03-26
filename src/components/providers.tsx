@@ -8,8 +8,6 @@ export default function Providers({ children }: any) {
   const [queryClient] = useState(() => new QueryClient());
 
   return (
-    <SessionProvider>
-      <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-    </SessionProvider>
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
   );
 }

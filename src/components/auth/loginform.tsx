@@ -11,9 +11,9 @@ export default function LoginForm() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col justify-center items-center gap-2">
       <Button
-        className="cursor-pointer"
+        className="cursor-pointer w-full"
         onClick={() => handleProviderLogin("google")}
       >
         <FaGoogle size={20} />

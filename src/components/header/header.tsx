@@ -1,11 +1,9 @@
-"use client";
-
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
-import { useSession } from "next-auth/react";
+import { auth } from "@/auth";
 
-export default function Header() {
-  const session = useSession();
+export default async function Header() {
+  const session = await auth();
   console.log("session: ", session);
 
   return (
@@ -15,7 +13,7 @@ export default function Header() {
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
+          <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
               alt=""
@@ -25,13 +23,16 @@ export default function Header() {
           </a>
         </div>
         <div className="flex justify-end">
-          {session && session.data?.user ? (
-            <a className="flex justify-center items-center gap-2 cursor-pointer">
+          {session && session?.user ? (
+            <a
+              className="flex justify-center items-center gap-2 cursor-pointer"
+              href="/profile"
+            >
               <p className="hidden md:inline-block text-primary lg:text-lg font-finger-paint">
-                {session.data.user?.name}
+                {session.user?.name}
               </p>
               <Avatar className="size-12">
-                <AvatarImage src={session.data?.user.image || ""} />
+                <AvatarImage src={session?.user.image || ""} />
                 <AvatarFallback>CN</AvatarFallback>
               </Avatar>
             </a>
