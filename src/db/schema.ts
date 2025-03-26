@@ -7,18 +7,13 @@ import {
   integer,
   primaryKey,
   boolean,
+  pgEnum,
+  date,
 } from "drizzle-orm/pg-core";
 import type { AdapterAccountType } from "next-auth/adapters";
 
-// export const usersTable = pgTable("users", {
-//   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
-//   email: varchar("email", { length: 255 }).notNull().unique(),
-//   //password: varchar("password").notNull(),
-//   provider: varchar("provider"),
-//   providerId: varchar("provider_id"),
-//   picture: varchar("picture"),
-//   createdAt: timestamp("created_at").defaultNow().notNull(),
-// });
+export const SUBSCRIPTION_PLANS = ["free", "pro"] as const;
+const planEnum = pgEnum("plan", ["free", "pro"]);
 
 export const users = pgTable("user", {
   id: text("id")
@@ -28,6 +23,12 @@ export const users = pgTable("user", {
   email: text("email").unique(),
   emailVerified: timestamp("emailVerified", { mode: "date" }),
   image: text("image"),
+  plan: planEnum().default("free"),
+  //plan: text("subscription").default("free"),
+  credits: integer("credits").default(0).notNull(),
+  creditsDate: date("credits_date", { mode: "date" })
+    .default(new Date())
+    .notNull(),
 });
 
 export const accounts = pgTable(

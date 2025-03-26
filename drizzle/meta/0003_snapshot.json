@@ -1,6 +1,6 @@
 {
-  "id": "d4bfef62-34c8-4902-ab67-c12b727044fa",
-  "prevId": "c9b80955-e021-4509-93cd-c6f83f070450",
+  "id": "69648ef1-a5e0-4d87-97e7-7e290286c184",
+  "prevId": "d4bfef62-34c8-4902-ab67-c12b727044fa",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -259,9 +259,10 @@
           "primaryKey": false,
           "notNull": false
         },
-        "subscription": {
-          "name": "subscription",
-          "type": "text",
+        "plan": {
+          "name": "plan",
+          "type": "plan",
+          "typeSchema": "public",
           "primaryKey": false,
           "notNull": false,
           "default": "'free'"
