@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang="en">
         <body
           suppressHydrationWarning
-          className={`${geistSans.variable} ${geistMono.variable} ${bubbleGums.variable} grid grid-rows-[auto_1fr_auto] min-h-screen bg-[url('/background.svg')]`}
+          className={`${geistSans.variable} ${geistMono.variable} ${bubbleGums.variable} font-geist-mono grid grid-rows-[auto_1fr_auto] min-h-screen bg-[url('/background.svg')]`}
         >
           <Header />
           {children}

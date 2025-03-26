@@ -45,6 +45,7 @@
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
 
+    --font-geist-mono: var(--font-geist-mono);
     --font-finger-paint: var(--font-finger-paint);
     --font-bubblegum: var(--font-bubblegum);
 }
