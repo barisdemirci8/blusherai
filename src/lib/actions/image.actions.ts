@@ -1,6 +1,6 @@
 "use server";
 
-import { BlusherForm, blusherFormSchema } from "@/components/image/blusherForm";
+import { BlusherForm } from "@/components/image/blusherForm";
 import OpenAI from "openai";
 
 const openai = new OpenAI({

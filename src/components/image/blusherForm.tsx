@@ -15,9 +15,8 @@ import BlusherImageHandler from "./blusherImageHandler";
 import { Button } from "../ui/button";
 import { useBlush } from "@/hooks/use-blush";
 import Loader from "../ui/loader";
-import { useToast, toast } from "@/hooks/use-toast";
+import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
-import GeneratedImage from "./generatedImage";
 import GeneratedImageDisplay from "./generatedImage";
 
 export const blusherFormSchema = z.object({
@@ -48,16 +47,6 @@ export default function BlusherForm() {
 
   const onSubmit = (formValues: BlusherForm) => {
     mutate(formValues);
-
-    // convert blob to buffer
-    // if (formValues.image && formValues.mask) {
-    // const formData = new FormData();
-    // formData.append("prompt", formValues.prompt);
-    // formData.append("image", formValues.image);
-    // formData.append("mask", formValues.mask);
-    // formData.append("size", formValues.size);
-
-    // }
   };
 
   useEffect(() => {

@@ -21,8 +21,6 @@ export default function BlusherImageHandler() {
     image.crossOrigin = "anonymous";
 
     image.onload = () => {
-      // image.width = 1024;
-      // image.height = 1024;
       imageRef.current = image;
       drawImageOnCanvas();
     };
@@ -96,14 +94,13 @@ export default function BlusherImageHandler() {
       const scaleX: number = canvas.width / imageRef.current.width;
       const scaleY: number = canvas.height / imageRef.current.height;
       const scale: number = Math.min(scaleX, scaleY);
-      //const scale = 1;
 
       const scaledWidth: number = imageRef.current.width * scale;
       const scaledHeight: number = imageRef.current.height * scale;
 
       const offsetX: number = (canvas.width - scaledWidth) / 2;
       const offsetY: number = (canvas.height - scaledHeight) / 2;
-      //ctx.drawImage(img, x, y, width, height, 0, 0, can.width, can.height);
+
       ctx.drawImage(
         imageRef.current,
         offsetX,
@@ -113,45 +110,6 @@ export default function BlusherImageHandler() {
       );
 
       //canvas.toBlob((blob) => setValue("image", blob), "image/png");
-    }
-  };
-
-  const downloadImage = () => {
-    const canvas = canvasRef.current;
-    const ctx = canvas?.getContext("2d");
-
-    if (canvas && ctx && imageRef.current) {
-      // create canvas for the mask
-      const maskCanvas = document.createElement("canvas");
-      maskCanvas.width = canvas.width;
-      maskCanvas.height = canvas.height;
-      const maskCtx = maskCanvas.getContext("2d");
-
-      if (maskCtx) {
-        // draw original image into the mask
-        /* const scaleX: number = canvas.width / imageRef.current.width;
-                const scaleY: number = canvas.height / imageRef.current.height;
-                const scale: number = Math.min(scaleX, scaleY);
-
-                const scaledWidth: number = imageRef.current.width * scale;
-                const scaledHeight: number = imageRef.current.height * scale;
-
-                const offsetX: number = (canvas.width - scaledWidth) / 2;
-                const offsetY: number = (canvas.height - scaledHeight) / 2;
-                maskCtx.drawImage(imageRef.current, offsetX, offsetY, scaledWidth, scaledHeight);
-                //maskCtx.drawImage(imageRef.current!, 0, 0);
-
-                // apply the mask => only parts of existing content that overlap stay
-                maskCtx.globalCompositeOperation = "destination-in";
-                maskCtx.drawImage(canvas, 0, 0); */
-        //maskCtx.drawImage(canvas, 0, 0);
-        // download the image
-        /* const dataUrl = canvas.toDataURL("image/png");
-                const link = document.createElement("a");
-                link.href = dataUrl;
-                link.download = "mask.png";
-                link.click(); */
-      }
     }
   };
 
@@ -188,8 +146,6 @@ export default function BlusherImageHandler() {
       <canvas
         ref={canvasRef}
         className="border rounded-md shadow-xl object-fit cursor-pointer  bg-muted"
-        //width={1024}
-        //height={1024}
         onMouseDown={startDraw}
         onMouseUp={stopDraw}
         onMouseLeave={stopDraw}
@@ -208,7 +164,7 @@ export default function BlusherImageHandler() {
         />
       </div>
 
-      <Button
+      {/* <Button
         type="button"
         onClick={downloadOriginal}
         className="hover:cursor-pointer"
@@ -222,7 +178,7 @@ export default function BlusherImageHandler() {
         className="hover:cursor-pointer"
       >
         Download Mask
-      </Button>
+      </Button> */}
     </div>
   );
 }

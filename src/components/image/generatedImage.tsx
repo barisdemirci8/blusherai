@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Button } from "../ui/button";
 import Loader from "../ui/loader";
-import { toast, useToast } from "@/hooks/use-toast";
+import { useToast } from "@/hooks/use-toast";
 import { GeneratedImage } from "@/lib/actions/image.actions";
 
 type GeneratedImageProps = {
@@ -61,12 +61,19 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
     }
   };
 
+  const downloadBlob = (blob: Blob) => {
+    const downloadUrl = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = downloadUrl;
+    a.download = "fancy-pic.png";
+    a.click();
+  };
+
   const downloadImage = async () => {
     setIsLoading(true);
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
 
-    let imageBlob;
     if (canvas && ctx && imageRef.current) {
       // download image via url
       if (generatedImage.format === "url") {
@@ -76,8 +83,6 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
           body: JSON.stringify({ url: generatedImage.url }),
         });
 
-        setIsLoading(false);
-
         if (!response.ok) {
           toast({
             title: "Download failed.",
@@ -85,33 +90,36 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
             variant: "destructive",
             duration: 2000,
           });
+
+          setIsLoading(false);
           return;
         }
 
-        imageBlob = await response.blob();
+        const imageBlob = await response.blob();
+        downloadBlob(imageBlob);
       }
 
       // download image via b64
       if (generatedImage.format === "b64_json") {
-        canvas.toBlob((blob) => (imageBlob = blob), "image/png");
-      }
+        canvas.toBlob((blob) => {
+          if (!blob) {
+            toast({
+              title: "Download failed.",
+              description: "No image data available, try again later.",
+              variant: "destructive",
+              duration: 2000,
+            });
 
-      if (!imageBlob) {
-        toast({
-          title: "Download failed.",
-          description: "No image data available, try again later.",
-          variant: "destructive",
-          duration: 2000,
-        });
-        return;
-      }
+            setIsLoading(false);
+            return;
+          }
 
-      const downloadUrl = URL.createObjectURL(imageBlob);
-      const a = document.createElement("a");
-      a.href = downloadUrl;
-      a.download = "fancy-pic.png";
-      a.click();
+          downloadBlob(blob);
+        }, "image/png");
+      }
     }
+
+    setIsLoading(false);
   };
 
   return (
