@@ -13,46 +13,51 @@ import {
 import { Input } from "../ui/input";
 import BlusherImageHandler from "./blusherImageHandler";
 import { Button } from "../ui/button";
-import { useBlush, useBlushBase64 } from "@/hooks/use-blush";
+import { useBlush } from "@/hooks/use-blush";
 import Loader from "../ui/loader";
 import { useToast, toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import GeneratedImage from "./generatedImage";
+import GeneratedImageDisplay from "./generatedImage";
 
-const blusherFormSchema = z.object({
+export const blusherFormSchema = z.object({
   prompt: z
     .string()
+    .trim()
     .nonempty({ message: "Please enter what you want to be edited in." }),
-  image: z.instanceof(Blob).nullable(),
+  image: z.instanceof(Blob).nullable().optional(),
   mask: z.instanceof(Blob).nullable().optional(),
+  size: z.enum(["256x256", "512x512", "1024x1024"]),
+  responseFormat: z.enum(["url", "b64_json"]),
 });
 export type BlusherForm = z.infer<typeof blusherFormSchema>;
 
-const format = "url";
-
 export default function BlusherForm() {
   const { mutate, data, error, status, isPending } = useBlush();
-  //const { mutate, data, error, status, isPending } = useBlushBase64();
 
   const form = useForm<BlusherForm>({
     resolver: zodResolver(blusherFormSchema),
     defaultValues: {
-      prompt: "a lions head",
+      prompt: "a lion head",
+      size: "1024x1024",
+      responseFormat: "url",
     },
   });
 
   const { control, handleSubmit } = form;
 
   const onSubmit = (formValues: BlusherForm) => {
-    // convert blob to buffer
-    if (formValues.image && formValues.mask) {
-      const formData = new FormData();
-      formData.append("prompt", formValues.prompt);
-      formData.append("image", formValues.image);
-      formData.append("mask", formValues.mask);
+    mutate(formValues);
 
-      mutate(formData);
-    }
+    // convert blob to buffer
+    // if (formValues.image && formValues.mask) {
+    // const formData = new FormData();
+    // formData.append("prompt", formValues.prompt);
+    // formData.append("image", formValues.image);
+    // formData.append("mask", formValues.mask);
+    // formData.append("size", formValues.size);
+
+    // }
   };
 
   useEffect(() => {
@@ -74,7 +79,10 @@ export default function BlusherForm() {
   }
 
   if (data) {
-    return <GeneratedImage imageUrl={data.imageUrl} format={"url"} />;
+    if (!data.generatedImage) {
+      return <div>{data.message}</div>;
+    }
+    return <GeneratedImageDisplay generatedImage={data.generatedImage} />;
   }
 
   return (
