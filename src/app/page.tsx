@@ -3,10 +3,11 @@ import BlusherForm from "@/components/image/blusherForm";
 
 export default function Home() {
   return (
-    <main className="flex flex-col justify-start align-center lg:p-12">
-      <section className="grid grid-rows-4 grid-cols-1 md:grid-cols-2">
-        <div className="p-4 lg:p-8">
-          <div className="flex gap-2 text-4xl font-bold text-muted-foreground overflow-hidden whitespace-nowrap">
+    <main className="flex flex-col justify-start align-center md:p-4 lg:p-8">
+      {/*<section className="grid grid-rows-4 grid-cols-1 md:grid-cols-2 h-fit">*/}
+      <section className="grid grid-flow-row md:grid-cols-2 h-fit">
+        <div className="p-4 lg:p-8 space-y-2">
+          <div className="flex gap-2 text-4xl font-bold text-primary overflow-hidden whitespace-nowrap">
             <AnimatedKeyword />
             <h1 className="inline-block">your image</h1>
           </div>
@@ -38,6 +39,9 @@ export default function Home() {
           />
         </div>
       </section>
+      <h1 className="text-2xl my-2 font-bold text-primary self-center">
+        try it yourself!
+      </h1>
       <BlusherForm />
     </main>
   );

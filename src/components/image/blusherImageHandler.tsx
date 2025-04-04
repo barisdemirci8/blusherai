@@ -217,7 +217,7 @@ export default function BlusherImageHandler() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3 md:w-[60%] bg-red-200">
+    <div className="flex flex-col justify-center items-center gap-3 md:w-[60%] bg-green-200">
       <canvas
         ref={canvasRef}
         className="border rounded-md shadow-xl object-fit cursor-pointer bg-muted"

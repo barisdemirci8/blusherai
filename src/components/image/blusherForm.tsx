@@ -78,10 +78,13 @@ export default function BlusherForm() {
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-3 flex flex-col justify-center items-center"
+        className="space-y-3 flex flex-col justify-center items-center bg-red-200"
       >
         <BlusherImageHandler />
-        <div className="grid grid-cols-5 gap-2 w-[90%] md:w-[60%] justify-center items-center">
+        <div
+          id="blush"
+          className="grid grid-cols-5 gap-2 w-[90%] md:w-[60%] justify-center items-center"
+        >
           <FormField
             name="prompt"
             control={control}
