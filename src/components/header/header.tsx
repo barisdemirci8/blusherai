@@ -3,8 +3,9 @@ import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { auth } from "@/auth";
 
 export default async function Header() {
-  const session = await auth();
-  console.log("session: ", session);
+  const session = {};
+  // const session = await auth();
+  // console.log("session: ", session);
 
   return (
     <header className="bg-back">
@@ -12,7 +13,7 @@ export default async function Header() {
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
-        <div className="flex lg:flex-1">
+        <div className="flex lg:flex-1 gap-2">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
@@ -21,9 +22,12 @@ export default async function Header() {
               className="h-8 w-auto"
             />
           </a>
+          <h1 className="text-2xl font-bold font-bubblegum text-muted-foreground">
+            Blusher AI
+          </h1>
         </div>
         <div className="flex justify-end">
-          {session && session?.user ? (
+          {session && session.user ? (
             <a
               className="flex justify-center items-center gap-2 cursor-pointer"
               href="/profile"

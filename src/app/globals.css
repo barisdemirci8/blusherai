@@ -48,6 +48,20 @@
     --font-geist-mono: var(--font-geist-mono);
     --font-finger-paint: var(--font-finger-paint);
     --font-bubblegum: var(--font-bubblegum);
+
+    --animate-blink: blinker 0.8s infinite;
+
+    @keyframes blinker {
+        0% {
+            border-color: black;
+        }
+        50% {
+            border-color: transparent;
+        }
+        100% {
+            border-color: black;
+        }
+    }
 }
 
 @layer base {

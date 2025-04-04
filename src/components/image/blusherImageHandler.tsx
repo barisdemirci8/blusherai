@@ -1,30 +1,40 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { use, useEffect, useRef, useState } from "react";
 import { Slider } from "../ui/slider";
 import { BlusherForm } from "./blusherForm";
 import { useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
+import { useToast } from "@/hooks/use-toast";
+import { RefreshCw, Upload } from "lucide-react";
+import { isSupportedImageFormat } from "@/lib/utils";
 
 export default function BlusherImageHandler() {
   const { setValue } = useFormContext<BlusherForm>();
+
+  const { toast } = useToast();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(60);
+  const [currentImage, setCurrentImage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!currentImage) {
+      return;
+    }
+
     const image = new Image();
-    image.src = "/images/ducks.png";
+    image.src = currentImage;
     image.crossOrigin = "anonymous";
 
     image.onload = () => {
       imageRef.current = image;
       drawImageOnCanvas();
     };
-  }, []);
+  }, [currentImage]);
 
   const startDraw = () => {
     setIsDrawing(true);
@@ -113,12 +123,78 @@ export default function BlusherImageHandler() {
     }
   };
 
+  const handleDragOver = (event: React.DragEvent<HTMLCanvasElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  const handleDrop = (event: React.DragEvent<HTMLCanvasElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+
+    // check any dropped files
+    const files: File[] = Array.from(event.dataTransfer.files);
+    if (!files || files.length < 1) {
+      toast({
+        title: "Image Drop failed.",
+        description: "No images were dropped.",
+        variant: "destructive",
+        duration: 2000,
+      });
+      return;
+    }
+
+    // only one image allowed
+    if (files.length > 1) {
+      toast({
+        title: "Image Drop failed.",
+        description: "You can only drop one image at a time.",
+        variant: "destructive",
+        duration: 2000,
+      });
+      return;
+    }
+
+    // check file type
+    const file: File = files[0];
+    if (!file || !isSupportedImageFormat(file.type)) {
+      toast({
+        title: "Not supported.",
+        description: "You can only drop images in PNG format.",
+        variant: "destructive",
+        duration: 2000,
+      });
+      return;
+    }
+
+    // check file size
+    if (file.size > 5_000_000) {
+      toast({
+        title: "Not supported.",
+        description: "You can only drop images in PNG format.",
+        variant: "destructive",
+        duration: 2000,
+      });
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      console.log("reader onload: ", e);
+      const imageSrc: string = e.target?.result as string;
+      if (!imageSrc) {
+        return;
+      }
+      setCurrentImage(imageSrc);
+    };
+    reader.readAsDataURL(file);
+  };
+
   const downloadOriginal = () => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext("2d");
 
     if (canvas && ctx && imageRef.current) {
-      console.log("download original");
       const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = imageRef.current.src;
@@ -132,7 +208,6 @@ export default function BlusherImageHandler() {
     const ctx = canvas?.getContext("2d");
 
     if (canvas && ctx && imageRef.current) {
-      console.log("download mask");
       const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
       link.href = dataUrl;
@@ -142,26 +217,40 @@ export default function BlusherImageHandler() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3">
+    <div className="flex flex-col justify-center items-center gap-3 md:w-[60%] bg-red-200">
       <canvas
         ref={canvasRef}
-        className="border rounded-md shadow-xl object-fit cursor-pointer  bg-muted"
+        className="border rounded-md shadow-xl object-fit cursor-pointer bg-muted"
         onMouseDown={startDraw}
         onMouseUp={stopDraw}
         onMouseLeave={stopDraw}
         onMouseMove={draw}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
       />
 
-      <div className="flex justify-center items-center gap-3 w-2/3 md:w-full">
-        <p className="whitespace-nowrap">Brush size:</p>
-        <Slider
-          className="cursor-pointer"
-          value={[brushSize]}
-          onValueChange={handleBrushChange}
-          step={1}
-          max={100}
-          min={1}
-        />
+      <div className="flex flex-col justify-center items-center gap-3 w-2/3 bg-yellow-200">
+        <div className="flex gap-3 w-full">
+          <p className="whitespace-nowrap">Brush size:</p>
+          <Slider
+            className="cursor-pointer"
+            value={[brushSize]}
+            onValueChange={handleBrushChange}
+            step={1}
+            max={100}
+            min={1}
+          />
+        </div>
+        <div className="flex justify-start gap-3">
+          <Button onClick={console.log}>
+            <Upload className="w-4 h-4 mr-2" />
+            Select Image
+          </Button>
+          <Button onClick={console.log} variant="outline">
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Reset
+          </Button>
+        </div>
       </div>
 
       {/* <Button

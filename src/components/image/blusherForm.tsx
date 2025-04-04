@@ -78,16 +78,10 @@ export default function BlusherForm() {
     <Form {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-3 flex flex-col justify-center items-center md:max-w-2/3 lg:max-w-1/2"
+        className="space-y-3 flex flex-col justify-center items-center"
       >
-        <p className="text-xl text-center max-w-2/3 bg-gradient-to-r from-[#24699d] to-[#791656] bg-clip-text text-transparent">
-          Upload your image, blur parts of it that you don&apos;t want and let
-          this &quot;fancy Chat-GPT wrapper&quot; generate a replacment based on
-          your input
-        </p>
         <BlusherImageHandler />
-        <p>{status}</p>
-        <div className="grid grid-cols-5 gap-2 w-[90%] justify-center items-center">
+        <div className="grid grid-cols-5 gap-2 w-[90%] md:w-[60%] justify-center items-center">
           <FormField
             name="prompt"
             control={control}
