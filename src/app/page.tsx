@@ -21,21 +21,21 @@ export default function Home() {
           <img
             alt=""
             src="/images/bg_1_copy.png"
-            className="w-2/3 h-auto object-fill rounded-xl"
+            className="w-2/3 lg:w-1/2 h-auto object-fill rounded-xl"
           />
         </div>
         <div className="md:row-span-2 self-right p-2 justify-items-end self-center">
           <img
             alt=""
             src="/images/bg_1_copy.png"
-            className="w-2/3 h-auto object-fill rounded-xl"
+            className="w-2/3 lg:w-1/2 h-auto object-fill rounded-xl"
           />
         </div>
         <div className="md:row-span-2 p-2">
           <img
             alt=""
             src="/images/bg_1_copy.png"
-            className="w-2/3 h-auto object-fill rounded-xl"
+            className="w-2/3 lg:w-1/2 h-auto object-fill rounded-xl"
           />
         </div>
       </section>
