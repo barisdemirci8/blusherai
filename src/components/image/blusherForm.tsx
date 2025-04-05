@@ -17,7 +17,6 @@ import { useBlush } from "@/hooks/use-blush";
 import Loader from "../ui/loader";
 import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
-import GeneratedImageDisplay from "./generatedImage";
 
 export const blusherFormSchema = z.object({
   prompt: z
@@ -28,11 +27,12 @@ export const blusherFormSchema = z.object({
   mask: z.instanceof(Blob).nullable().optional(),
   size: z.enum(["256x256", "512x512", "1024x1024"]),
   responseFormat: z.enum(["url", "b64_json"]),
+  originalImage: z.string().optional(),
 });
 export type BlusherForm = z.infer<typeof blusherFormSchema>;
 
 export default function BlusherForm() {
-  const { mutate, data, error, status, isPending } = useBlush();
+  const { mutate, data, error, status, isPending, reset } = useBlush();
 
   const form = useForm<BlusherForm>({
     resolver: zodResolver(blusherFormSchema),
@@ -67,12 +67,9 @@ export default function BlusherForm() {
     );
   }
 
-  if (data) {
-    if (!data.generatedImage) {
-      return <div>{data.message}</div>;
-    }
-    return <GeneratedImageDisplay generatedImage={data.generatedImage} />;
-  }
+  const handleReset = () => {
+    reset();
+  };
 
   return (
     <Form {...form}>
@@ -80,7 +77,10 @@ export default function BlusherForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-3 flex flex-col justify-center items-center bg-red-200"
       >
-        <BlusherImageHandler />
+        <BlusherImageHandler
+          generatedImage={data?.generatedImage}
+          reset={() => handleReset()}
+        />
         <div
           id="blush"
           className="grid grid-cols-5 gap-2 w-[90%] md:w-[60%] justify-center items-center"

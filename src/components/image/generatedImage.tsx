@@ -8,10 +8,11 @@ import { GeneratedImage } from "@/lib/actions/image.actions";
 
 type GeneratedImageProps = {
   generatedImage: GeneratedImage;
+  reset: () => void;
 };
 
 export default function GeneratedImageDisplay(props: GeneratedImageProps) {
-  const { generatedImage } = props;
+  const { generatedImage, reset } = props;
 
   const { toast } = useToast();
 
@@ -41,6 +42,11 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
     const ctx = canvas?.getContext("2d");
 
     if (canvas && ctx && imageRef.current) {
+      const MAX_WIDTH: number = 1024;
+      let { width, height } = imageRef.current;
+
+      canvas.width = width;
+      canvas.height = height;
       const scaleX: number = canvas.width / imageRef.current.width;
       const scaleY: number = canvas.height / imageRef.current.height;
       const scale: number = Math.min(scaleX, scaleY);
@@ -128,13 +134,25 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
       <canvas
         hidden={isLoading}
         ref={canvasRef}
-        className="border rounded-md shadow-xl object-fit w-128 h-128"
-        width={1024}
-        height={1024}
+        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px]"
       />
-      <Button className="cursor-pointer" onClick={downloadImage}>
-        Download
-      </Button>
+      <div className="flex flex-row justify-center items-center gap-3">
+        <Button
+          className="cursor-pointer"
+          variant="destructive"
+          type="button"
+          onClick={() => reset()}
+        >
+          Reset
+        </Button>
+        <Button
+          className="cursor-pointer"
+          onClick={downloadImage}
+          type="button"
+        >
+          Download
+        </Button>
+      </div>
     </div>
   );
 }

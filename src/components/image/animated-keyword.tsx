@@ -30,7 +30,6 @@ export default function AnimatedKeyword() {
 
   // start a typewriter animation for a text in the dataText array
   function startTextAnimation(i: number) {
-    console.log("loaded");
     if (typeof keyWords[i] == "undefined") {
       setTimeout(function () {
         startTextAnimation(0);

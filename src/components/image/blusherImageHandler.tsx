@@ -6,12 +6,20 @@ import { BlusherForm } from "./blusherForm";
 import { useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, Upload } from "lucide-react";
+import { Cone, RefreshCw, Upload } from "lucide-react";
 import { isSupportedImageFormat } from "@/lib/utils";
+import { GeneratedImage } from "@/lib/actions/image.actions";
+import GeneratedImageDisplay from "./generatedImage";
 
-export default function BlusherImageHandler() {
-  const { setValue } = useFormContext<BlusherForm>();
+type BlusherImageHandlerProps = {
+  generatedImage?: GeneratedImage;
+  reset: () => void;
+};
 
+export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
+  const { generatedImage, reset } = props;
+
+  const { watch, setValue, getValues } = useFormContext<BlusherForm>();
   const { toast } = useToast();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -19,22 +27,22 @@ export default function BlusherImageHandler() {
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(60);
-  const [currentImage, setCurrentImage] = useState<string | null>(null);
+  const originalImage: string | undefined = watch("originalImage");
 
   useEffect(() => {
-    if (!currentImage) {
+    if (!originalImage) {
       return;
     }
 
     const image = new Image();
-    image.src = currentImage;
+    image.src = originalImage;
     image.crossOrigin = "anonymous";
 
     image.onload = () => {
       imageRef.current = image;
       drawImageOnCanvas();
     };
-  }, [currentImage]);
+  }, [originalImage]);
 
   const startDraw = () => {
     setIsDrawing(true);
@@ -90,14 +98,14 @@ export default function BlusherImageHandler() {
     const ctx = canvas?.getContext("2d");
 
     if (canvas && ctx && imageRef.current) {
-      const MAX_WIDTH: number = 512;
+      const MAX_WIDTH: number = 1024;
       let { width, height } = imageRef.current;
 
-      if (width > MAX_WIDTH) {
-        const scaleFactor = MAX_WIDTH / width;
-        width = MAX_WIDTH;
-        height = height * scaleFactor;
-      }
+      // if (width > MAX_WIDTH) {
+      //   const scaleFactor = MAX_WIDTH / width;
+      //   width = MAX_WIDTH;
+      //   height = height * scaleFactor;
+      // }
 
       canvas.width = width;
       canvas.height = height;
@@ -168,7 +176,7 @@ export default function BlusherImageHandler() {
     }
 
     // check file size
-    if (file.size > 5_000_000) {
+    if (file.size > 5000000) {
       toast({
         title: "Not supported.",
         description: "You can only drop images in PNG format.",
@@ -180,12 +188,11 @@ export default function BlusherImageHandler() {
 
     const reader = new FileReader();
     reader.onload = (e) => {
-      console.log("reader onload: ", e);
       const imageSrc: string = e.target?.result as string;
       if (!imageSrc) {
         return;
       }
-      setCurrentImage(imageSrc);
+      setValue("originalImage", imageSrc);
     };
     reader.readAsDataURL(file);
   };
@@ -216,11 +223,22 @@ export default function BlusherImageHandler() {
     }
   };
 
+  const handleReset = () => {
+    reset();
+    drawImageOnCanvas();
+  };
+
+  if (generatedImage) {
+    return (
+      <GeneratedImageDisplay generatedImage={generatedImage} reset={reset} />
+    );
+  }
+
   return (
     <div className="flex flex-col justify-center items-center gap-3 md:w-[60%] bg-green-200">
       <canvas
         ref={canvasRef}
-        className="border rounded-md shadow-xl object-fit cursor-pointer bg-muted"
+        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] w-full"
         onMouseDown={startDraw}
         onMouseUp={stopDraw}
         onMouseLeave={stopDraw}
@@ -229,7 +247,7 @@ export default function BlusherImageHandler() {
         onDrop={handleDrop}
       />
 
-      <div className="flex flex-col justify-center items-center gap-3 w-2/3 bg-yellow-200">
+      <div className="flex flex-col justify-center items-center gap-3 w-2/3">
         <div className="flex gap-3 w-full">
           <p className="whitespace-nowrap">Brush size:</p>
           <Slider
@@ -246,7 +264,7 @@ export default function BlusherImageHandler() {
             <Upload className="w-4 h-4 mr-2" />
             Select Image
           </Button>
-          <Button onClick={console.log} variant="outline">
+          <Button onClick={handleReset} variant="outline" type="button">
             <RefreshCw className="w-4 h-4 mr-2" />
             Reset
           </Button>

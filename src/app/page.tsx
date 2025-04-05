@@ -5,8 +5,8 @@ export default function Home() {
   return (
     <main className="flex flex-col justify-start align-center md:p-4 lg:p-8">
       {/*<section className="grid grid-rows-4 grid-cols-1 md:grid-cols-2 h-fit">*/}
-      <section className="grid grid-flow-row md:grid-cols-2 h-fit">
-        <div className="p-4 lg:p-8 space-y-2">
+      <section className="grid grid-flow-row md:grid-cols-2 min-h-screen">
+        <div className="p-4 lg:p-8 space-y-2 self-center">
           <div className="flex gap-2 text-4xl font-bold text-primary overflow-hidden whitespace-nowrap">
             <AnimatedKeyword />
             <h1 className="inline-block">your image</h1>
@@ -21,28 +21,30 @@ export default function Home() {
           <img
             alt=""
             src="/images/bg_1_copy.png"
-            className="w-2/3 lg:w-1/2 h-auto object-fill rounded-xl"
+            className="w-2/3 h-auto object-fill rounded-xl"
           />
         </div>
         <div className="md:row-span-2 self-right p-2 justify-items-end self-center">
           <img
             alt=""
             src="/images/bg_1_copy.png"
-            className="w-2/3 lg:w-1/2 h-auto object-fill rounded-xl"
+            className="w-2/3  h-auto object-fill rounded-xl"
           />
         </div>
         <div className="md:row-span-2 p-2">
           <img
             alt=""
             src="/images/bg_1_copy.png"
-            className="w-2/3 lg:w-1/2 h-auto object-fill rounded-xl"
+            className="w-2/3  h-auto object-fill rounded-xl"
           />
         </div>
       </section>
-      <h1 className="text-2xl my-2 font-bold text-primary self-center">
-        try it yourself!
-      </h1>
-      <BlusherForm />
+      <section>
+        <h1 className="text-2xl my-2 font-bold text-primary self-center">
+          try it yourself!
+        </h1>
+        <BlusherForm />
+      </section>
     </main>
   );
 }
