@@ -1,25 +1,16 @@
 "use client";
 
-import { use, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Slider } from "../ui/slider";
 import { BlusherForm } from "./blusherForm";
 import { useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Cone, RefreshCw, Upload } from "lucide-react";
+import { RefreshCw, Upload } from "lucide-react";
 import { isSupportedImageFormat } from "@/lib/utils";
-import { GeneratedImage } from "@/lib/actions/image.actions";
-import GeneratedImageDisplay from "./generatedImage";
 
-type BlusherImageHandlerProps = {
-  generatedImage?: GeneratedImage;
-  reset: () => void;
-};
-
-export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
-  const { generatedImage, reset } = props;
-
-  const { watch, setValue, getValues } = useFormContext<BlusherForm>();
+export default function BlusherImageHandler() {
+  const { watch, setValue } = useFormContext<BlusherForm>();
   const { toast } = useToast();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -224,15 +215,8 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
   };
 
   const handleReset = () => {
-    reset();
     drawImageOnCanvas();
   };
-
-  if (generatedImage) {
-    return (
-      <GeneratedImageDisplay generatedImage={generatedImage} reset={reset} />
-    );
-  }
 
   return (
     <div className="flex flex-col justify-center items-center gap-3 md:w-[60%] bg-green-200">

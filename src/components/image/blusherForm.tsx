@@ -17,6 +17,7 @@ import { useBlush } from "@/hooks/use-blush";
 import Loader from "../ui/loader";
 import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
+import GeneratedImageDisplay from "./generatedImage";
 
 export const blusherFormSchema = z.object({
   prompt: z
@@ -28,6 +29,9 @@ export const blusherFormSchema = z.object({
   size: z.enum(["256x256", "512x512", "1024x1024"]),
   responseFormat: z.enum(["url", "b64_json"]),
   originalImage: z.string().optional(),
+});
+export const inpaintRequestSchema = blusherFormSchema.omit({
+  originalImage: true,
 });
 export type BlusherForm = z.infer<typeof blusherFormSchema>;
 
@@ -46,7 +50,8 @@ export default function BlusherForm() {
   const { control, handleSubmit } = form;
 
   const onSubmit = (formValues: BlusherForm) => {
-    mutate(formValues);
+    const { originalImage, ...rest } = formValues;
+    mutate(rest);
   };
 
   useEffect(() => {
@@ -67,9 +72,21 @@ export default function BlusherForm() {
     );
   }
 
-  const handleReset = () => {
-    reset();
-  };
+  if (data) {
+    if (!data.generatedImage) {
+      return (
+        <div className="flex flex-col justify-center items-center gap-3">
+          Something went wrong.
+        </div>
+      );
+    }
+    return (
+      <GeneratedImageDisplay
+        generatedImage={data.generatedImage}
+        reset={reset}
+      />
+    );
+  }
 
   return (
     <Form {...form}>
@@ -77,10 +94,7 @@ export default function BlusherForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-3 flex flex-col justify-center items-center bg-red-200"
       >
-        <BlusherImageHandler
-          generatedImage={data?.generatedImage}
-          reset={() => handleReset()}
-        />
+        <BlusherImageHandler />
         <div
           id="blush"
           className="grid grid-cols-5 gap-2 w-[90%] md:w-[60%] justify-center items-center"
