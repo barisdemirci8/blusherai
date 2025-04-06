@@ -5,6 +5,8 @@ import { Button } from "../ui/button";
 import Loader from "../ui/loader";
 import { useToast } from "@/hooks/use-toast";
 import { GeneratedImage } from "@/lib/actions/image.actions";
+import { useFormContext } from "react-hook-form";
+import { BlusherForm } from "./blusherForm";
 
 type GeneratedImageProps = {
   generatedImage: GeneratedImage;
@@ -14,6 +16,7 @@ type GeneratedImageProps = {
 export default function GeneratedImageDisplay(props: GeneratedImageProps) {
   const { generatedImage, reset } = props;
 
+  const { setValue } = useFormContext<BlusherForm>();
   const { toast } = useToast();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -128,6 +131,11 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
     setIsLoading(false);
   };
 
+  const handleReset = () => {
+    reset();
+    setValue("image", null);
+  };
+
   return (
     <div className="flex flex-col justify-center items-center gap-3">
       {isLoading ? <Loader /> : <p>Here is your image!</p>}
@@ -141,7 +149,7 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
           className="cursor-pointer"
           variant="destructive"
           type="button"
-          onClick={() => reset()}
+          onClick={handleReset}
         >
           Reset
         </Button>

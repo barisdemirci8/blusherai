@@ -1,6 +1,6 @@
 "use client";
 
-import { useForm } from "react-hook-form";
+import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import {
@@ -47,11 +47,13 @@ export default function BlusherForm() {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, resetField, watch } = form;
+  const image = watch("image");
 
   const onSubmit = (formValues: BlusherForm) => {
     const { originalImage, ...rest } = formValues;
     mutate(rest);
+    resetField("image", { defaultValue: null });
   };
 
   useEffect(() => {
@@ -64,65 +66,66 @@ export default function BlusherForm() {
     }
   }, [error]);
 
-  if (isPending) {
+  // if (isPending) {
+  //   return (
+  //     <div className="flex flex-col justify-center items-center gap-3">
+  //       <Loader />
+  //     </div>
+  //   );
+  // }
+
+  if (data && !data.generatedImage) {
     return (
       <div className="flex flex-col justify-center items-center gap-3">
-        <Loader />
+        Something went wrong.
       </div>
     );
   }
 
-  if (data) {
-    if (!data.generatedImage) {
-      return (
-        <div className="flex flex-col justify-center items-center gap-3">
-          Something went wrong.
-        </div>
-      );
-    }
-    return (
-      <GeneratedImageDisplay
-        generatedImage={data.generatedImage}
-        reset={reset}
-      />
-    );
-  }
-
   return (
-    <Form {...form}>
+    <FormProvider {...form}>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-3 flex flex-col justify-center items-center bg-red-200"
+        className="space-y-3 flex flex-col justify-center items-center w-[90%] my-auto"
       >
-        <BlusherImageHandler />
-        <div
-          id="blush"
-          className="grid grid-cols-5 gap-2 w-[90%] md:w-[60%] justify-center items-center"
-        >
-          <FormField
-            name="prompt"
-            control={control}
-            render={({ field }) => (
-              <FormItem className="col-span-4">
-                <FormControl>
-                  <Input
-                    {...field}
-                    className="focus-visible:ring-0 focus-visible:ring-offset-0"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
+        {data && data.generatedImage ? (
+          <GeneratedImageDisplay
+            generatedImage={data.generatedImage}
+            reset={reset}
           />
-          <Button
-            type="submit"
-            className="hover:cursor-pointer"
-            disabled={isPending}
+        ) : (
+          <BlusherImageHandler isLoading={isPending} />
+        )}
+        {image && (
+          <div
+            id="blush"
+            className="grid grid-cols-5 gap-2 w-full md:w-[60%] justify-center items-center"
           >
-            Generate
-          </Button>
-        </div>
+            <FormField
+              name="prompt"
+              control={control}
+              render={({ field }) => (
+                <FormItem className="col-span-4">
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="focus-visible:ring-0 focus-visible:ring-offset-0"
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button
+              type="submit"
+              className="hover:cursor-pointer"
+              disabled={isPending}
+            >
+              Generate
+            </Button>
+          </div>
+        )}
       </form>
-    </Form>
+    </FormProvider>
   );
 }

@@ -6,12 +6,18 @@ import { BlusherForm } from "./blusherForm";
 import { useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { RefreshCw, Upload } from "lucide-react";
+import { Paintbrush, RefreshCw, Upload } from "lucide-react";
 import { isSupportedImageFormat } from "@/lib/utils";
 import { Input } from "../ui/input";
 
-export default function BlusherImageHandler() {
-  const { watch, setValue } = useFormContext<BlusherForm>();
+type BlusherImageHandlerProps = {
+  isLoading: boolean;
+};
+
+export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
+  const { isLoading } = props;
+
+  const { watch, setValue, resetField } = useFormContext<BlusherForm>();
   const { toast } = useToast();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -225,26 +231,19 @@ export default function BlusherImageHandler() {
 
   const handleReset = () => {
     drawImageOnCanvas();
+    setValue("image", null);
   };
 
   return (
-    <div className="flex flex-col justify-center items-center gap-3 md:w-[60%] bg-green-200">
-      <canvas
-        ref={canvasRef}
-        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] w-full"
-        onMouseDown={startDraw}
-        onMouseUp={stopDraw}
-        onMouseLeave={stopDraw}
-        onMouseMove={draw}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-      />
-
-      <div className="flex flex-col justify-center items-center gap-3 w-2/3">
+    <div className="flex flex-col justify-center items-center gap-4 lg:gap-12 md:w-[60%]">
+      <div className="flex flex-col lg:flex-row justify-center items-center gap-3 w-full">
         <div className="flex gap-3 w-full">
-          <p className="whitespace-nowrap">Brush size:</p>
+          <p className="whitespace-nowrap flex justify-center items-center gap-2">
+            <Paintbrush className="size-4" />
+            Brush size:
+          </p>
           <Slider
-            className="cursor-pointer"
+            className="cursor-pointer w-full"
             value={[brushSize]}
             onValueChange={handleBrushChange}
             step={1}
@@ -257,6 +256,7 @@ export default function BlusherImageHandler() {
             onClick={() => fileInputRef.current?.click()}
             variant="outline"
             type="button"
+            className="cursor-pointer"
           >
             <Upload className="w-4 h-4 mr-2" />
             <Input
@@ -268,28 +268,29 @@ export default function BlusherImageHandler() {
             />
             Select Image
           </Button>
-          <Button onClick={handleReset} variant="outline" type="button">
+          <Button
+            onClick={handleReset}
+            variant="outline"
+            type="button"
+            className="cursor-pointer"
+          >
             <RefreshCw className="w-4 h-4 mr-2" />
             Reset
           </Button>
         </div>
       </div>
-
-      {/* <Button
-        type="button"
-        onClick={downloadOriginal}
-        className="hover:cursor-pointer"
-      >
-        Download Original
-      </Button>
-
-      <Button
-        type="button"
-        onClick={downloadMask}
-        className="hover:cursor-pointer"
-      >
-        Download Mask
-      </Button> */}
+      <canvas
+        ref={canvasRef}
+        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] max-h-[60vh] object-contain"
+        onMouseDown={startDraw}
+        onMouseUp={stopDraw}
+        onMouseLeave={stopDraw}
+        onMouseMove={draw}
+        onDragOver={handleDragOver}
+        onDrop={handleDrop}
+        height={400}
+        width={400}
+      />
     </div>
   );
 }

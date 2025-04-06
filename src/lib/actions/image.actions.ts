@@ -33,7 +33,8 @@ export const inpaintImage = async (
     case "openai":
       return inpaintOpenAi(inpaintRequest);
     case "stabilityai":
-      return inpaintStabilityAi(inpaintRequest);
+      //return inpaintStabilityAi(inpaintRequest);
+      return mockResponse();
     default:
       console.log(
         `inpaintImage: provider not configured ${configuredProvider}`,
@@ -127,7 +128,9 @@ const inpaintStabilityAi = async (
   }
 };
 
-const mockResponse = () => {
+const mockResponse = async (): Promise<InpaintResponse> => {
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
   return {
     generatedImage: {
       format: "b64_json",
