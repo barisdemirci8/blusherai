@@ -8,6 +8,7 @@ import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { RefreshCw, Upload } from "lucide-react";
 import { isSupportedImageFormat } from "@/lib/utils";
+import { Input } from "../ui/input";
 
 export default function BlusherImageHandler() {
   const { watch, setValue } = useFormContext<BlusherForm>();
@@ -15,6 +16,7 @@ export default function BlusherImageHandler() {
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const imageRef = useRef<HTMLImageElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [isDrawing, setIsDrawing] = useState<boolean>(false);
   const [brushSize, setBrushSize] = useState<number>(60);
@@ -130,9 +132,16 @@ export default function BlusherImageHandler() {
   const handleDrop = (event: React.DragEvent<HTMLCanvasElement>) => {
     event.preventDefault();
     event.stopPropagation();
+    handleFiles(Array.from(event.dataTransfer.files));
+  };
 
+  const handleFileSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    handleFiles(Array.from(event.target.files || []));
+  };
+
+  const handleFiles = (files: File[]) => {
     // check any dropped files
-    const files: File[] = Array.from(event.dataTransfer.files);
     if (!files || files.length < 1) {
       toast({
         title: "Image Drop failed.",
@@ -244,8 +253,19 @@ export default function BlusherImageHandler() {
           />
         </div>
         <div className="flex justify-start gap-3">
-          <Button onClick={console.log}>
+          <Button
+            onClick={() => fileInputRef.current?.click()}
+            variant="outline"
+            type="button"
+          >
             <Upload className="w-4 h-4 mr-2" />
+            <Input
+              ref={fileInputRef}
+              onChange={handleFileSelection}
+              type="file"
+              accept="image/*"
+              hidden={true}
+            />
             Select Image
           </Button>
           <Button onClick={handleReset} variant="outline" type="button">
