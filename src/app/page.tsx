@@ -20,21 +20,21 @@ export default function Home() {
         <div className="md:row-span-2 md:col-start-2 p-2 self-end">
           <img
             alt=""
-            src="/images/bg_1_copy.png"
+            src="/images/ducks.png"
             className="w-2/3 h-auto object-fill rounded-xl"
           />
         </div>
         <div className="md:row-span-2 self-right p-2 justify-items-end self-center">
           <img
             alt=""
-            src="/images/bg_1_copy.png"
+            src="/images/ducks_edited.png"
             className="w-2/3  h-auto object-fill rounded-xl"
           />
         </div>
         <div className="md:row-span-2 p-2">
           <img
             alt=""
-            src="/images/bg_1_copy.png"
+            src="/images/ducks_final.png"
             className="w-2/3  h-auto object-fill rounded-xl"
           />
         </div>

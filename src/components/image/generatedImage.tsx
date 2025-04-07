@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import { GeneratedImage } from "@/lib/actions/image.actions";
 import { useFormContext } from "react-hook-form";
 import { BlusherForm } from "./blusherForm";
+import { Download, RotateCcw } from "lucide-react";
 
 type GeneratedImageProps = {
   generatedImage: GeneratedImage;
@@ -142,7 +143,7 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
       <canvas
         hidden={isLoading}
         ref={canvasRef}
-        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px]"
+        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] max-h-[60vh] object-contain"
       />
       <div className="flex flex-row justify-center items-center gap-3">
         <Button
@@ -151,6 +152,7 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
           type="button"
           onClick={handleReset}
         >
+          <RotateCcw />
           Reset
         </Button>
         <Button
@@ -158,6 +160,7 @@ export default function GeneratedImageDisplay(props: GeneratedImageProps) {
           onClick={downloadImage}
           type="button"
         >
+          <Download />
           Download
         </Button>
       </div>

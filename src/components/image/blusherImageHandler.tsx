@@ -6,7 +6,7 @@ import { BlusherForm } from "./blusherForm";
 import { useFormContext } from "react-hook-form";
 import { Button } from "../ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Paintbrush, RefreshCw, Upload } from "lucide-react";
+import { Paintbrush, RefreshCw, RotateCcw, Upload } from "lucide-react";
 import { isSupportedImageFormat } from "@/lib/utils";
 import { Input } from "../ui/input";
 import Loader from "../ui/loader";
@@ -211,7 +211,7 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
     if (canvas && ctx && imageRef.current) {
       const dataUrl = canvas.toDataURL("image/png");
       const link = document.createElement("a");
-      link.href = imageRef.current.src;
+      link.href = dataUrl;
       link.download = "original.png";
       link.click();
     }
@@ -237,7 +237,9 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
 
   return (
     <div className="flex flex-col justify-center items-center gap-4 lg:gap-12 md:w-[60%]">
-      <div className="flex flex-col lg:flex-row justify-center items-center gap-3 w-full">
+      <div
+        className={`flex flex-col lg:flex-row justify-center items-center gap-3 w-full ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+      >
         <div className="flex gap-3 w-full">
           <p className="whitespace-nowrap flex justify-center items-center gap-2">
             <Paintbrush className="size-4" />
@@ -259,7 +261,7 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
             type="button"
             className="cursor-pointer"
           >
-            <Upload className="w-4 h-4 mr-2" />
+            <Upload />
             <Input
               ref={fileInputRef}
               onChange={handleFileSelection}
@@ -275,7 +277,7 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
             type="button"
             className="cursor-pointer"
           >
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RotateCcw />
             Reset
           </Button>
         </div>

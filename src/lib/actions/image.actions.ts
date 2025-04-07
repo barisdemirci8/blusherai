@@ -33,8 +33,8 @@ export const inpaintImage = async (
     case "openai":
       return inpaintOpenAi(inpaintRequest);
     case "stabilityai":
-      //return inpaintStabilityAi(inpaintRequest);
-      return mockResponse();
+      return inpaintStabilityAi(inpaintRequest);
+    //return mockResponse();
     default:
       console.log(
         `inpaintImage: provider not configured ${configuredProvider}`,
