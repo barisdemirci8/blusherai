@@ -3,18 +3,11 @@
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "../ui/form";
+import { FormControl, FormField, FormItem, FormMessage } from "../ui/form";
 import { Input } from "../ui/input";
 import BlusherImageHandler from "./blusherImageHandler";
 import { Button } from "../ui/button";
 import { useBlush } from "@/hooks/use-blush";
-import Loader from "../ui/loader";
 import { toast } from "@/hooks/use-toast";
 import { useEffect } from "react";
 import GeneratedImageDisplay from "./generatedImage";
@@ -36,7 +29,7 @@ export const inpaintRequestSchema = blusherFormSchema.omit({
 export type BlusherForm = z.infer<typeof blusherFormSchema>;
 
 export default function BlusherForm() {
-  const { mutate, data, error, status, isPending, reset } = useBlush();
+  const { mutate, data, error, isPending, reset } = useBlush();
 
   const form = useForm<BlusherForm>({
     resolver: zodResolver(blusherFormSchema),
@@ -65,14 +58,6 @@ export default function BlusherForm() {
       });
     }
   }, [error]);
-
-  // if (isPending) {
-  //   return (
-  //     <div className="flex flex-col justify-center items-center gap-3">
-  //       <Loader />
-  //     </div>
-  //   );
-  // }
 
   if (data && !data.generatedImage) {
     return (

@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { Paintbrush, RefreshCw, Upload } from "lucide-react";
 import { isSupportedImageFormat } from "@/lib/utils";
 import { Input } from "../ui/input";
+import Loader from "../ui/loader";
 
 type BlusherImageHandlerProps = {
   isLoading: boolean;
@@ -279,18 +280,25 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
           </Button>
         </div>
       </div>
-      <canvas
-        ref={canvasRef}
-        className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] max-h-[60vh] object-contain"
-        onMouseDown={startDraw}
-        onMouseUp={stopDraw}
-        onMouseLeave={stopDraw}
-        onMouseMove={draw}
-        onDragOver={handleDragOver}
-        onDrop={handleDrop}
-        height={400}
-        width={400}
-      />
+      <div className="relative">
+        <canvas
+          ref={canvasRef}
+          className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] max-h-[60vh] object-contain"
+          onMouseDown={startDraw}
+          onMouseUp={stopDraw}
+          onMouseLeave={stopDraw}
+          onMouseMove={draw}
+          onDragOver={handleDragOver}
+          onDrop={handleDrop}
+          height={400}
+          width={400}
+        />
+        {isLoading && (
+          <div className="absolute inset-0 bg-white/50 flex items-center justify-center rounded-md">
+            <Loader />
+          </div>
+        )}
+      </div>
     </div>
   );
 }
