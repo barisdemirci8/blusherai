@@ -50,6 +50,7 @@
     --font-bubblegum: var(--font-bubblegum);
 
     --animate-blink: blinker 0.8s infinite;
+    --animate-fade-down: fade-down 0.5s ease-in-out;
 
     @keyframes blinker {
         0% {
@@ -60,6 +61,17 @@
         }
         100% {
             border-color: black;
+        }
+    }
+
+    @keyframes fade-down {
+        0% {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        100% {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 }

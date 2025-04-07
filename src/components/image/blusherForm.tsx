@@ -84,11 +84,12 @@ export default function BlusherForm() {
         {image && !data && (
           <div
             id="blush"
-            className="grid grid-cols-5 gap-2 w-full md:w-[60%] justify-center items-center"
+            className="grid grid-cols-5 gap-2 w-full md:w-[60%] justify-center items-center animate-fade-down"
           >
             <FormField
               name="prompt"
               control={control}
+              disabled={isPending}
               render={({ field }) => (
                 <FormItem className="col-span-4">
                   <FormControl>
