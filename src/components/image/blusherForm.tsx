@@ -81,7 +81,7 @@ export default function BlusherForm() {
         ) : (
           <BlusherImageHandler isLoading={isPending} />
         )}
-        {image && (
+        {image && !data && (
           <div
             id="blush"
             className="grid grid-cols-5 gap-2 w-full md:w-[60%] justify-center items-center"
