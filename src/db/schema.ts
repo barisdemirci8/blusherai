@@ -25,7 +25,7 @@ export const users = pgTable("user", {
   image: text("image"),
   plan: planEnum().default("free"),
   //plan: text("subscription").default("free"),
-  credits: integer("credits").default(0).notNull(),
+  credits: integer("credits").default(16).notNull(),
   creditsDate: date("credits_date", { mode: "date" })
     .default(new Date())
     .notNull(),

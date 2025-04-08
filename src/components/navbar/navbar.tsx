@@ -38,6 +38,8 @@ export default async function Header() {
           <NavbarLink display="Tool" path="/inpaint" />
           <div className="h-6 border-l-4 border-border"></div>
           <NavbarLink display="How to" path="/howto" />
+          <div className="h-6 border-l-4 border-border"></div>
+          <NavbarLink display="Pricing" path="/pricing" />
         </div>
         {/* right side */}
         <div className="flex gap-3 md:hidden">

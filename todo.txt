@@ -1,0 +1,17 @@
+stability ai:
+1$ = 100 credits
+1 image = 3 credits
+
+9 credits daily
+
+blusher AI:
+1$ = 50 credits
+
+credit packages:
+Starter	$2	100	~16 gens	—	$0.12	$0.06
+Creator	$5	250	~41 gens	+10 credits	$0.117	~$0.057
+Pro 	$10	500	~83 gens	+25 credits	$0.115	~$0.055
+Studio	$20	1000~166 gens	+75 credits	$0.112	~$0.052
+
+subscription packages:
+none for now

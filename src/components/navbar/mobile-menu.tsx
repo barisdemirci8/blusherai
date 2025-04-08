@@ -70,6 +70,11 @@ export default function MobileMenu({ session }: MobileMenuProps) {
               path="/howto"
               callback={() => setOpen(false)}
             />
+            <NavbarLink
+              display="Pricing"
+              path="/pricing"
+              callback={() => setOpen(false)}
+            />
           </div>
           <DrawerFooter className="pt-2">
             <DrawerClose asChild></DrawerClose>
