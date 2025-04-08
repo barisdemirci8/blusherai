@@ -71,7 +71,7 @@ export default async function PricingPage() {
           {packages.map((pkg) => (
             <div
               key={pkg.name}
-              className="border border-gray-200 rounded-lg shadow-sm bg-white hover:scale-[1.1]"
+              className="border border-gray-200 rounded-lg shadow-sm bg-white hover:scale-[1.1] transition ease-in-out"
             >
               <div className="p-6">
                 <h2 className="text-lg leading-6 font-medium text-primary">
