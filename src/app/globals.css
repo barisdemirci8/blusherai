@@ -41,6 +41,8 @@
     --color-chart-4: hsl(var(--chart-4));
     --color-chart-5: hsl(var(--chart-5));
 
+    --color-bg2: hsl(var(--bg2));
+
     --radius-lg: var(--radius);
     --radius-md: calc(var(--radius) - 2px);
     --radius-sm: calc(var(--radius) - 4px);
@@ -113,6 +115,8 @@
         --chart-3: 197 37% 24%;
         --chart-4: 43 74% 66%;
         --chart-5: 27 87% 67%;
+
+        --bg2: 321, 23%, 74%;
     }
 
     .dark {
@@ -141,6 +145,8 @@
         --chart-3: 30 80% 55%;
         --chart-4: 280 65% 60%;
         --chart-5: 340 75% 55%;
+
+        --bg2: 321, 23%, 74%;
     }
 }
 

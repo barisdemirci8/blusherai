@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { bubbleGums, fingerPaint, geistMono, geistSans } from "@/lib/fonts";
-import Header from "@/components/header/header";
+import Header from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import Providers from "@/components/providers";
 import { Toaster } from "@/components/ui/toaster";

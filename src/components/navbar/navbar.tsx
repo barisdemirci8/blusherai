@@ -1,11 +1,12 @@
 import Link from "next/link";
 import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 import { auth } from "@/auth";
+import { Button } from "../ui/button";
+import NavbarLink from "./navbar-link";
+import MobileMenu from "./mobile-menu";
 
 export default async function Header() {
   const session = {};
-  // const session = await auth();
-  // console.log("session: ", session);
 
   return (
     <header className="bg-back">
@@ -13,7 +14,33 @@ export default async function Header() {
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
-        <div className="flex lg:flex-1 gap-2">
+        {/* left side */}
+        <div className="flex gap-2">
+          {/* mobile  */}
+          <MobileMenu />
+          {/* desktop  */}
+          <div className="hidden md:flex gap-3">
+            <a href="/" className="-m-1.5 p-1.5">
+              <span className="sr-only">Your Company</span>
+              <img
+                alt=""
+                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
+                className="h-8 w-auto"
+              />
+            </a>
+            <h1 className="text-2xl font-bold font-bubblegum text-muted-foreground">
+              Blusher AI
+            </h1>
+          </div>
+        </div>
+        {/* middle */}
+        <div className="hidden md:flex flex-1 gap-4 font-bold text-xl text-primary translate-x-[20%]">
+          <NavbarLink display="Tool" path="/inpaint" />
+          <div className="h-6 border-l-4 border-border"></div>
+          <NavbarLink display="How to" path="/howto" />
+        </div>
+        {/* right side */}
+        <div className="flex gap-3 md:hidden">
           <a href="/" className="-m-1.5 p-1.5">
             <span className="sr-only">Your Company</span>
             <img
@@ -26,7 +53,7 @@ export default async function Header() {
             Blusher AI
           </h1>
         </div>
-        <div className="flex justify-end">
+        <div className="hidden md:flex justify-end">
           {session && session.user ? (
             <a
               className="flex justify-center items-center gap-2 cursor-pointer"
@@ -41,7 +68,9 @@ export default async function Header() {
               </Avatar>
             </a>
           ) : (
-            <Link href={"/api/auth/signin"}>Login &rarr;</Link>
+            <Button asChild variant="outline" className="bg-transparent">
+              <Link href={"/api/auth/signin"}>Login &rarr;</Link>
+            </Button>
           )}
         </div>
       </nav>
