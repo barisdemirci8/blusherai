@@ -58,7 +58,7 @@ export default async function PricingPage() {
     <div className="py-12">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center">
-          <p className="mt-1 text-4xl font-extrabold text-primary sm:text-5xl sm:tracking-tight lg:text-6xl">
+          <p className="mt-1 text-3xl font-semibold text-primary sm:text-5xl sm:tracking-tight lg:text-6xl">
             Choose your plan
           </p>
           <p className="max-w-xl mt-5 mx-auto text-xl text-gray-500">

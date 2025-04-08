@@ -19,7 +19,7 @@ export default function NavbarLink(props: NavbarLinkProps) {
     <Link
       href={path}
       onClick={() => (callback ? callback() : undefined)}
-      className={`hover:text-bg2 ${isActive ? "underline decoration-4 decoration-bg2" : ""}`}
+      className={`hover:text-bg2 ${isActive ? "text-bg2 underline decoration-4 decoration-bg2" : ""}`}
     >
       {display}
     </Link>

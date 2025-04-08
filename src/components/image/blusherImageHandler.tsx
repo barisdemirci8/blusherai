@@ -131,12 +131,16 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
     }
   };
 
-  const handleDragOver = (event: React.DragEvent<HTMLCanvasElement>) => {
+  const handleDragOver = (
+    event: React.DragEvent<HTMLCanvasElement> | React.DragEvent<HTMLDivElement>,
+  ) => {
     event.preventDefault();
     event.stopPropagation();
   };
 
-  const handleDrop = (event: React.DragEvent<HTMLCanvasElement>) => {
+  const handleDrop = (
+    event: React.DragEvent<HTMLCanvasElement> | React.DragEvent<HTMLDivElement>,
+  ) => {
     event.preventDefault();
     event.stopPropagation();
     handleFiles(Array.from(event.dataTransfer.files));
@@ -285,7 +289,7 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
       <div className="relative">
         <canvas
           ref={canvasRef}
-          className="border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] max-h-[60vh] object-contain"
+          className={`border rounded-md shadow-xl cursor-pointer bg-muted md:max-w-[512px] lg:max-w-[1024px] max-h-[60vh] object-contain ${!originalImage ? "border-2 border-dashed border-primary" : ""}`}
           onMouseDown={startDraw}
           onMouseUp={stopDraw}
           onMouseLeave={stopDraw}
@@ -298,6 +302,15 @@ export default function BlusherImageHandler(props: BlusherImageHandlerProps) {
         {isLoading && (
           <div className="absolute inset-0 bg-white/50 flex items-center justify-center rounded-md">
             <Loader />
+          </div>
+        )}
+        {!originalImage && (
+          <div
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
+            className="absolute inset-0 bg-white/50 flex items-center justify-center rounded-md text-primary"
+          >
+            Drag & Drop your image here
           </div>
         )}
       </div>
