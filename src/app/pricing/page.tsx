@@ -2,57 +2,35 @@ import { Button } from "@/components/ui/button";
 
 const packages = [
   {
-    name: "Basic",
+    id: "starter",
+    name: "Starter",
     price: 2,
     credits: 50,
     description: "Perfect for beginners",
-    features: [
-      "50 image credits",
-      "Standard resolution",
-      "Basic support",
-      "1 style option",
-    ],
   },
   {
-    name: "Standard",
+    id: "creator",
+    name: "Creator",
     price: 5,
     credits: 250,
     description: "Great for casual creators",
-    features: [
-      "150 image credits",
-      "HD resolution",
-      "Email support",
-      "3 style options",
-    ],
   },
   {
+    id: "pro",
     name: "Pro",
     price: 10,
     credits: 500,
     description: "Ideal for professionals",
-    features: [
-      "400 image credits",
-      "4K resolution",
-      "Priority support",
-      "5 style options",
-      "Commercial license",
-    ],
   },
   {
-    name: "Enterprise",
+    id: "studio",
+    name: "Studio",
     price: 20,
     credits: 1000,
     description: "For serious content creators",
-    features: [
-      "1000 image credits",
-      "8K resolution",
-      "24/7 support",
-      "All style options",
-      "Commercial license",
-      "API access",
-    ],
   },
 ];
+
 export default async function PricingPage() {
   return (
     <div className="py-12">
@@ -69,7 +47,9 @@ export default async function PricingPage() {
 
         <div className="mt-12 space-y-4 sm:mt-16 sm:space-y-0 sm:grid sm:grid-cols-2 sm:gap-6 lg:max-w-4xl lg:mx-auto xl:max-w-none xl:mx-auto xl:grid-cols-4">
           {packages.map((pkg) => (
-            <div
+            <form
+              action={`/api/checkout?type=${pkg.id}`}
+              method="POST"
               key={pkg.name}
               className="border border-gray-200 rounded-lg shadow-sm bg-white hover:scale-[1.1] transition ease-in-out"
             >
@@ -93,7 +73,7 @@ export default async function PricingPage() {
                   Buy {pkg.name} Pack
                 </Button>
               </div>
-            </div>
+            </form>
           ))}
         </div>
       </div>
